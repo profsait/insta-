@@ -1,0 +1,32 @@
+name: Build Debug APK
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kodlari Cek
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: JDK 17 Kur
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Gradle Izinlerini Ver
+        run: chmod +x gradlew
+
+      - name: Debug APK Derle
+        run: ./gradlew assembleDebug
+
+      - name: APK Dosyasini Yukle
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-apk
+          path: '**/*.apk'
